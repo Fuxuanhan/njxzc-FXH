@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+		
+		<!--1.数据源配置  -->
+		<context:property-placeholder location="classpath:config/db.properties"/>
+		<bean id="dataSource"
+			class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+			<property name="driverClassName" value="${mysql.driver}"/>
+			<property name="url" value="${mysql.url}"/>
+			<property name="username" value="${mysql.username}"/>
+			<property name="password" value="${mysql.password}"/>
+		</bean>
+		<!-- 2.mybatis 配置 数据源  -->
+		<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<!-- 将你写的  数据源配置  直接  映射到  mybatis-spring jar包的 dataSource 属性上  -->
+			<property name="dataSource" ref="dataSource"/>
+			<property name="configLocation" value="classpath:config/mybatis-config.xml"/>
+		</bean>
+		<!-- 3. 交由Spring 对  SqlSession 进行处理   用户只负责调用，实例化等  全权交给Spring
+		       sqlSessionFactory实例化   与  Mapper 扫描 -->
+		 <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		 	<!-- mapper 配置 -->
+		 	<property name="basePackage" value="com.neu.springmvc1.mapper"/>
+		 	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+		 </bean>     
+		 <!-- 4.事务管理配置  -->   
+		 <bean id="txManager"
+		 	class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		 	<property name="dataSource" ref="dataSource"/>
+		 </bean>      
+		 <!-- 使用声明方式  引入 自定义的事务管理  -->
+		 <tx:annotation-driven transaction-manager="txManager"/>      	       
+</beans>

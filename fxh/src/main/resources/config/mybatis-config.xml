@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--SSM框架整合  原先配置在Mybatis的环境 可以直接在Spring配置文件中配置
+        mybatis 配置文件  只需要配置一些  Spring 无法配置的内容即可
+        例如: 缓存配置、懒加载等 ... -->
+    <!--别名扫描  加载我们自己的pojo 实体类对应的包  使用别名扫描-->
+    <typeAliases>
+        <package name="com.neu.springmvc1.pojo"/>
+    </typeAliases>
+</configuration>
